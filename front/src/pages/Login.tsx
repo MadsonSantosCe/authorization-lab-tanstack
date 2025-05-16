@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSignIn } from "../hooks/auth/useSignIn";
+import { useSignIn } from "../hooks/auth/useAuthentication";
 
 export default function Login() {
   const { mutate: signIn } = useSignIn();

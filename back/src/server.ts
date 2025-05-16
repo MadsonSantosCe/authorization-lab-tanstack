@@ -61,7 +61,6 @@ app.post("/login", (req, res, next) => {
 
 app.post("/logout", (req, res, next) => {
   try {
-    res.clearCookie("refreshToken");
     res.status(200).json({
       message: "Usuário deslogado com sucesso",
     });

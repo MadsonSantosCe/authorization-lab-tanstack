@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import { useAuth } from "./hooks/auth/useAuth";
+import { useAuth } from "./hooks/auth/useAuthentication";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { data: user, isLoading } = useAuth();

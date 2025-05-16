@@ -2,16 +2,6 @@ import axios from "axios";
 import api from "../../api/axios";
 import { removeAccessToken, saveAccessToken } from "../../utils/authStorage";
 
-export const signInRequest = async () => {
-  const response = await api.post("/login");
-  return response.data;
-};
-
-export const signOutRequest = async () => {
-  const response = await api.post("/logout");
-  return response.data;
-};
-
 export const verifyAcsessTokenResquest = async () => {
   try {
     const response = await api.post("/verify-access-token");
@@ -36,4 +26,14 @@ export const refreshTokenResquest = async () => {
     }
     throw error;
   }
+};
+
+export const signInRequest = async () => {
+  const response = await api.post("/login");
+  return response.data;
+};
+
+export const signOutRequest = async () => {
+  const response = await api.post("/logout");
+  return response.data;
 };
