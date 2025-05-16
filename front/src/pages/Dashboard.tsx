@@ -3,7 +3,7 @@ import { useAuth, useSignOut } from "../hooks/auth/useAuthentication";
 
 export default function Dashboard() {
   const { mutate: signOut } = useSignOut();
-  const { data, isLoading } = useAuth();
+  const { data } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,9 +15,6 @@ export default function Dashboard() {
       console.error("Erro ao fazer login:", error);
     }
   };
-
-  if (isLoading) return <p>Carregando...</p>;
-  if (!data) return <p>Usuário não autenticado</p>;
 
   return (
     <>

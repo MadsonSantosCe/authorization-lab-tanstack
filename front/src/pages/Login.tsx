@@ -15,19 +15,21 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Senha"
-      />
-      <button type="submit">Entrar</button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Senha"
+        />
+        <button type="submit">Entrar</button>
+      </form>
+    </>
   );
 }
