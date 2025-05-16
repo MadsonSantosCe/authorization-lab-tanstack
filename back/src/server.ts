@@ -122,7 +122,8 @@ app.post("/verify-access-token", (req, res, next) => {
 app.post("/refresh-token", (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
 
-  if (!refreshToken) {
+  if (!refreshToken) {    
+    res.clearCookie("refreshToken");
     res.status(401).json({
       message: "Unauthorized",
     });
@@ -133,7 +134,8 @@ app.post("/refresh-token", (req, res, next) => {
     refreshToken,
     "4e1f9b17-a768-47dd-b9b8-fc4c9ef00606"
   );
-  if (!decoded?.id) {
+  if (!decoded?.id) {    
+    res.clearCookie("refreshToken");
     res.status(401).json({
       message: "Unauthorized",
     });

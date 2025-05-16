@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../hooks/auth/useAuth";
+import { useSignOut } from "../hooks/auth/useSignOut";
 
 export default function Dashboard() {
+  const { mutate: signOut } = useSignOut();
   const { data, isLoading } = useAuth();
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post("/logout");
+      signOut();
       navigate("/login");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
@@ -21,10 +22,10 @@ export default function Dashboard() {
 
   return (
     <>
-    <p>Olá, {data.user.name}!</p>
-    <form onSubmit={handleSubmit}>
-      <button type="submit">sair</button>
-    </form>
+      <p>Olá, {data.user.name}!</p>
+      <form onSubmit={handleSubmit}>
+        <button type="submit">sair</button>
+      </form>
     </>
   );
 }
