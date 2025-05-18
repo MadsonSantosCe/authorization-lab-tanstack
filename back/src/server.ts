@@ -56,7 +56,8 @@ app.post("/login", (req, res, next) => {
 });
 
 app.post("/logout", (req, res, next) => {
-  try {
+  try {     
+    res.clearCookie("refreshToken");
     res.status(200).json({
       message: "Usuário deslogado com sucesso",
     });
@@ -107,7 +108,7 @@ app.post("/refresh-token", (req, res, next) => {
 
   if (!refreshToken) {    
     res.clearCookie("refreshToken");
-    res.status(401).json({
+    res.status(403).json({
       message: "Unauthorized",
     });
     return;
@@ -119,7 +120,7 @@ app.post("/refresh-token", (req, res, next) => {
   );
   if (!decoded?.id) {    
     res.clearCookie("refreshToken");
-    res.status(401).json({
+    res.status(403).json({
       message: "Unauthorized",
     });
     return;
@@ -148,7 +149,6 @@ app.post("/refresh-token", (req, res, next) => {
     res.status(200).json({ 
       message: "Token atualizado com sucesso",
       accessToken: newToken,
-      user,
     });
   } catch (error) {
     next(error);

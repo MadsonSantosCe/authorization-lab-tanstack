@@ -2,9 +2,16 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { UseAuth } from "./context/authProvider";
+import { useVerifyAcsessToken } from "./hooks/auth/useAuthentication";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { isLoading } = useVerifyAcsessToken();
   const { user } = UseAuth();
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
+
   return user ? children : <Navigate to="/login" />;
 }
 
