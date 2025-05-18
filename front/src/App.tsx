@@ -1,12 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import { useAuth } from "./hooks/auth/useAuthentication";
+import { UseAuth } from "./context/authProvider";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { data: user, isLoading } = useAuth();
-
-  if (isLoading) return <p>Verificando autenticação...</p>;
+  const { user } = UseAuth();
   return user ? children : <Navigate to="/login" />;
 }
 

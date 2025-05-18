@@ -1,17 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSignIn } from "../hooks/auth/useAuthentication";
+import { UseAuth } from "../context/authProvider";
 
 export default function Login() {
-  const { mutate: signIn } = useSignIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { signIn } = UseAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    signIn();
-    navigate("/");
+    setLoading(true);
+    try {
+      await signIn();
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,7 +36,9 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Senha"
         />
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={loading}>
+          Entrar
+        </button>
       </form>
     </>
   );

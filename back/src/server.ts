@@ -48,11 +48,7 @@ app.post("/login", (req, res, next) => {
     res.status(200).json({
       message: "Usuário autenticado com sucesso",
       accessToken: accessToken,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
+      user,
     });
   } catch (error) {
     return next(error);
@@ -97,21 +93,9 @@ app.post("/verify-access-token", (req, res, next) => {
       email: "madson@email.com",
     };
 
-    const newToken = jwt.sign(
-      {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-      "74590fcd-c273-4569-a684-543139dba664",
-      {
-        expiresIn: "1m",
-      }
-    );
-
     res.status(200).json({
+      message: "Token verificado com sucesso",
       user,
-      accessToken: newToken,
     });
   } catch (error) {
     next(error);
@@ -161,7 +145,11 @@ app.post("/refresh-token", (req, res, next) => {
       }
     );
 
-    res.status(200).json({ user, accessToken: newToken });
+    res.status(200).json({ 
+      message: "Token atualizado com sucesso",
+      accessToken: newToken,
+      user,
+    });
   } catch (error) {
     next(error);
   }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getAccessToken } from "../utils/authStorage";
-import { refreshTokenResquest } from "../services/auth/authServices";
+import { UseAuth } from "../context/authProvider";
 
 const api = axios.create({
   baseURL: "http://localhost:3000",
@@ -28,8 +28,9 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
-      try {
-        await refreshTokenResquest();
+      try{
+        const { refreshToken } = UseAuth();
+        await refreshToken();
 
         return api(originalRequest);
       } catch (refreshError) {
