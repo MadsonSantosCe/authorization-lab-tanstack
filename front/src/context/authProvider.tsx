@@ -74,19 +74,34 @@ function AuthProvider({ children }: authProviderPromps) {
     }
   }, []);
 
+  const refreshToken = useCallback(async () => {
+    try {
+      const response = await refreshTokenResquest();
+      setUser(response.user);
+      saveAccessToken(response.accessToken);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        removeAccessToken();
+        setUser(null);
+      }
+    }
+  }, []);
+
   api.interceptors.response.use(
     (response) => {
       return response;
     },
     async (error) => {
       const originalRequest = error.config;
-
-      if (error.response && error.response.status === 401) {
+      if (
+        error.response?.status === 401 &&
+        !originalRequest._retry &&
+        !originalRequest.url.includes("/refresh-token")
+      ) {
+        originalRequest._retry = true;
         try {
-          const result = await refreshTokenResquest();
-          saveAccessToken(result.accessToken);
+          await refreshToken();
           return api(originalRequest);
-
         } catch (refreshError) {
           signOut();
           return Promise.reject(refreshError);

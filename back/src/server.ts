@@ -108,7 +108,7 @@ app.post("/refresh-token", (req, res, next) => {
 
   if (!refreshToken) {    
     res.clearCookie("refreshToken");
-    res.status(403).json({
+    res.status(401).json({
       message: "Unauthorized",
     });
     return;
@@ -120,7 +120,7 @@ app.post("/refresh-token", (req, res, next) => {
   );
   if (!decoded?.id) {    
     res.clearCookie("refreshToken");
-    res.status(403).json({
+    res.status(401).json({
       message: "Unauthorized",
     });
     return;
