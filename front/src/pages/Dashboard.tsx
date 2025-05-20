@@ -1,30 +1,25 @@
 import { useNavigate } from "react-router-dom";
+import { useSignOut } from "../hooks/auth/useAuthentication";
 import { UseAuth } from "../context/authProvider";
-import { useState } from "react";
 
 export default function Dashboard() {
-  const navigate = useNavigate();  
-    const [loading, setLoading] = useState(false);
-  const { signOut, user } = UseAuth();
+  const { user } = UseAuth();
+  const { mutateAsync: signOut, isPending } = useSignOut();  
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      await signOut();
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    await signOut();
+    navigate("/");
   };
 
   return (
     <>
       <p>Olá, {user?.name}!</p>
       <form onSubmit={handleSubmit}>
-        <button type="submit" disabled={loading}>sair</button>
+        <button type="submit" disabled={isPending}>
+          sair
+        </button>
       </form>
     </>
   );

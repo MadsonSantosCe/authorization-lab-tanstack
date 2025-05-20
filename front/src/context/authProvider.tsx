@@ -6,15 +6,8 @@ import {
   type ReactNode,
   useState,
 } from "react";
-import {
-  refreshTokenResquest,
-  signInRequest,
-  signOutRequest,
-  verifyAcsessTokenResquest,
-  type ISignInPayload,
-} from "../services/auth/authServices";
 import { removeAccessToken, saveAccessToken } from "../utils/authStorage";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import api from "../api/axios";
 
 type authProviderPromps = {
@@ -27,11 +20,22 @@ interface IUser {
   email: string;
 }
 
+export interface ISignInPayload {
+  email: string;
+  password: string;
+}
+
+export interface ISignUpPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
 interface IAuthContext {
   user: IUser | null;
   signIn: (payload: ISignInPayload) => Promise<void>;
   signOut: () => Promise<void>;
-  verifyAcessToken: () => Promise<void>;
+  verifyAcessToken: () => Promise<AxiosResponse>;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -41,9 +45,9 @@ function AuthProvider({ children }: authProviderPromps) {
 
   const signIn = useCallback(async ({ email, password }: ISignInPayload) => {
     try {
-      const response = await signInRequest({ email, password });
-      setUser(response.user);
-      saveAccessToken(response.accessToken);
+      const response = await api.post("/login", { email, password });
+      setUser(response.data.user);
+      saveAccessToken(response.data.accessToken);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data);
@@ -53,7 +57,7 @@ function AuthProvider({ children }: authProviderPromps) {
 
   const signOut = useCallback(async () => {
     try {
-      await signOutRequest();
+      await api.post("/logout");
       removeAccessToken();
       setUser(null);
     } catch (error) {
@@ -65,21 +69,22 @@ function AuthProvider({ children }: authProviderPromps) {
 
   const verifyAcessToken = useCallback(async () => {
     try {
-      const response = await verifyAcsessTokenResquest();
-      setUser(response.user);
+      const response = await api.post("/verify-access-token");
+      setUser(response.data.user);
       return response;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        console.error(error);
+        throw new Error(error.response?.data);
       }
+      throw error;
     }
   }, []);
 
   const refreshToken = useCallback(async () => {
     try {
-      const response = await refreshTokenResquest();
-      setUser(response.user);
-      saveAccessToken(response.accessToken);
+      const response = await api.post("/refresh-token");
+      setUser(response.data.user);
+      saveAccessToken(response.data.accessToken);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         removeAccessToken();
