@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      await signIn();
+      await signIn({ email, password });
       navigate("/");
     } catch (error) {
       console.log(error);

@@ -11,6 +11,7 @@ import {
   signInRequest,
   signOutRequest,
   verifyAcsessTokenResquest,
+  type ISignInPayload,
 } from "../services/auth/authServices";
 import { removeAccessToken, saveAccessToken } from "../utils/authStorage";
 import axios from "axios";
@@ -28,7 +29,7 @@ interface IUser {
 
 interface IAuthContext {
   user: IUser | null;
-  signIn: () => Promise<void>;
+  signIn: (payload: ISignInPayload) => Promise<void>;
   signOut: () => Promise<void>;
   verifyAcessToken: () => Promise<void>;
 }
@@ -38,9 +39,9 @@ const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 function AuthProvider({ children }: authProviderPromps) {
   const [user, setUser] = useState<IUser | null>(null);
 
-  const signIn = useCallback(async () => {
+  const signIn = useCallback(async ({ email, password }: ISignInPayload) => {
     try {
-      const response = await signInRequest();
+      const response = await signInRequest({ email, password });
       setUser(response.user);
       saveAccessToken(response.accessToken);
     } catch (error) {

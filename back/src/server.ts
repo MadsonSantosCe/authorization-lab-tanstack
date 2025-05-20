@@ -78,14 +78,14 @@ app.post("/login", async (req, res, next) => {
     });
 
     if (!user) {
-      res.status(404).json({
+      res.status(400).json({
         message: "Usuário não encontrado",
       });
       return;
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-      res.status(401).json({
+      res.status(400).json({
         message: "Senha E-mail ou senha inválidos",
       });
       return;
