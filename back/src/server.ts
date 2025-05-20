@@ -122,7 +122,8 @@ app.post("/login", async (req, res, next) => {
 
     res.status(200).json({
       message: "Usuário autenticado com sucesso",
-      accessToken: accessToken,user: {
+      accessToken: accessToken,
+      user: {
         id: user.id,
         name: user.name,
         email: user.email,
@@ -178,11 +179,17 @@ app.post("/verify-access-token", async (req, res, next) => {
       res.status(404).json({
         message: "Usuário não encontrado",
       });
+      return;
     }
 
     res.status(200).json({
       message: "Token verificado com sucesso",
-      user,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        verified: user.verified,
+      }
     });
   } catch (error) {
     next(error);
