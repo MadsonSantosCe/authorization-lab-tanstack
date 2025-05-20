@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { UseAuth } from "./context/authProvider";
 import { useVerifyAcsessToken } from "./hooks/auth/useAuthentication";
+import Register from "./pages/Register";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isLoading } = useVerifyAcsessToken();
@@ -20,6 +21,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/"
           element={

@@ -35,6 +35,7 @@ interface IAuthContext {
   user: IUser | null;
   signIn: (payload: ISignInPayload) => Promise<void>;
   signOut: () => Promise<void>;
+  signUp: (payload: ISignUpPayload) => Promise<void>;
   verifyAcessToken: () => Promise<AxiosResponse>;
 }
 
@@ -60,6 +61,17 @@ function AuthProvider({ children }: authProviderPromps) {
       await api.post("/logout");
       removeAccessToken();
       setUser(null);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data);
+      }
+    }
+  }, []);
+
+  const signUp = useCallback(async ({ name, email, password }: ISignUpPayload) => {
+    try {
+      const response = await api.post("/register", { name, email, password });
+      setUser(response.data.user);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data);
@@ -123,9 +135,10 @@ function AuthProvider({ children }: authProviderPromps) {
       user,
       signIn,
       signOut,
+      signUp,
       verifyAcessToken,
     }),
-    [user, signIn, signOut, verifyAcessToken]
+    [user, signIn, signOut, signUp, verifyAcessToken]
   );
 
   return (

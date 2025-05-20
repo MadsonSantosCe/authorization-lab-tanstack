@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { UseAuth, type ISignInPayload } from "../../context/authProvider";
+import { UseAuth, type ISignInPayload, type ISignUpPayload } from "../../context/authProvider";
 import { getAccessToken } from "../../utils/authStorage";
 
 export function useVerifyAcsessToken() {
@@ -28,5 +28,14 @@ export function useSignOut() {
   return useMutation({
     mutationKey: ["signOut"],
     mutationFn: signOut,
+  });
+}
+
+export function useSignUp() {
+  const { signUp } = UseAuth();
+  return useMutation({
+    mutationKey: ["signUp"],
+    mutationFn: ({name, email, password }: ISignUpPayload) =>
+      signUp({name, email, password }),
   });
 }
