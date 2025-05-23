@@ -1,12 +1,21 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSignIn } from "../hooks/auth/useAuthentication";
+import { clearToken, getAccessToken } from "../utils/authStorage";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { mutateAsync: signIn, isPending } = useSignIn();
   const navigate = useNavigate();
+  const token = getAccessToken();
+
+  useEffect(() => {
+     if (token) {
+    clearToken();
+  }
+  }, []);  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
