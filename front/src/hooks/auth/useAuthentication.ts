@@ -8,7 +8,7 @@ export function useVerifyAcsessToken() {
   
   return useQuery({
     queryKey: ["verify-access-token"],
-    queryFn: verifyAcessToken,
+    queryFn: () => verifyAcessToken(),
     staleTime: Infinity,    
     enabled: !!token,
   });
@@ -27,7 +27,7 @@ export function useSignOut() {
   const { signOut } = UseAuth();
   return useMutation({
     mutationKey: ["signOut"],
-    mutationFn: signOut,
+    mutationFn: () => signOut(),
   });
 }
 
